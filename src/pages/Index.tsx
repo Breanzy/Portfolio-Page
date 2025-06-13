@@ -1,19 +1,26 @@
-
 import React from 'react';
-import { Github, ExternalLink, Code, Database, Server, Smartphone } from 'lucide-react';
+import { Github, ExternalLink, Code, Database, Server, Smartphone, Linkedin, Instagram, GraduationCap, MapPin, Calendar } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useSpring, animated, useTrail, useInView } from '@react-spring/web';
 
 const Index = () => {
   const [heroRef, heroInView] = useInView();
+  const [aboutRef, aboutInView] = useInView();
   const [skillsRef, skillsInView] = useInView();
   const [projectsRef, projectsInView] = useInView();
 
   const heroAnimation = useSpring({
     opacity: heroInView ? 1 : 0,
     transform: heroInView ? 'translateY(0px)' : 'translateY(50px)',
+    config: { tension: 280, friction: 60 }
+  });
+
+  const aboutAnimation = useSpring({
+    opacity: aboutInView ? 1 : 0,
+    transform: aboutInView ? 'translateY(0px)' : 'translateY(50px)',
     config: { tension: 280, friction: 60 }
   });
 
@@ -171,6 +178,98 @@ const Index = () => {
             </Button>
           </div>
         </animated.div>
+      </section>
+
+      {/* About Me Section */}
+      <section ref={aboutRef} className="px-6 py-16">
+        <div className="max-w-6xl mx-auto">
+          <animated.div style={aboutAnimation}>
+            <h3 className="text-3xl font-bold text-white text-center mb-12">About Me</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Profile Image and Basic Info */}
+              <div className="lg:col-span-1">
+                <Card className="bg-slate-900/50 border-slate-700 hover:border-blue-500 transition-all duration-300">
+                  <CardContent className="p-6 text-center">
+                    <Avatar className="w-32 h-32 mx-auto mb-4">
+                      <AvatarImage src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=400&fit=crop&crop=face" alt="Brean Julius Carbonilla" />
+                      <AvatarFallback className="text-2xl bg-gradient-to-r from-blue-600 to-cyan-600 text-white">BC</AvatarFallback>
+                    </Avatar>
+                    <h4 className="text-xl font-bold text-white mb-2">Brean Julius Carbonilla</h4>
+                    <p className="text-blue-400 mb-4">Full Stack Developer</p>
+                    <div className="flex items-center justify-center gap-2 text-gray-400 mb-4">
+                      <MapPin className="w-4 h-4" />
+                      <span>Philippines</span>
+                    </div>
+                    <div className="flex justify-center gap-3">
+                      <Button asChild variant="outline" size="sm" className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white">
+                        <a href="https://github.com/Breanzy" target="_blank" rel="noopener noreferrer">
+                          <Github className="w-4 h-4" />
+                        </a>
+                      </Button>
+                      <Button asChild variant="outline" size="sm" className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white">
+                        <a href="https://linkedin.com/in/brean-julius-carbonilla" target="_blank" rel="noopener noreferrer">
+                          <Linkedin className="w-4 h-4" />
+                        </a>
+                      </Button>
+                      <Button asChild variant="outline" size="sm" className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white">
+                        <a href="https://instagram.com/breanzy" target="_blank" rel="noopener noreferrer">
+                          <Instagram className="w-4 h-4" />
+                        </a>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Bio and Details */}
+              <div className="lg:col-span-2 space-y-6">
+                <Card className="bg-slate-900/50 border-slate-700 hover:border-blue-500 transition-all duration-300">
+                  <CardHeader>
+                    <CardTitle className="text-white">Biography</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-300 leading-relaxed mb-4">
+                      I'm a passionate full-stack developer with a love for creating innovative digital experiences. 
+                      My journey in software development started during my college years, and I've been constantly 
+                      learning and evolving ever since. I specialize in modern web technologies, particularly the 
+                      MERN stack, and enjoy building applications that solve real-world problems.
+                    </p>
+                    <p className="text-gray-300 leading-relaxed">
+                      When I'm not coding, you can find me exploring new technologies, contributing to open-source 
+                      projects, or sharing my knowledge with the developer community. I believe in the power of 
+                      technology to make a positive impact on people's lives.
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-slate-900/50 border-slate-700 hover:border-blue-500 transition-all duration-300">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-white">
+                      <GraduationCap className="w-5 h-5" />
+                      Education
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="border-l-2 border-blue-500 pl-4">
+                        <h4 className="font-semibold text-white">Bachelor of Science in Information Technology</h4>
+                        <p className="text-blue-400">Mindanao State University - Iligan Institute of Technology</p>
+                        <div className="flex items-center gap-2 text-gray-400 text-sm mt-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>2020 - 2024</span>
+                        </div>
+                        <p className="text-gray-300 text-sm mt-2">
+                          Focused on software development, database management, and web technologies. 
+                          Participated in various programming competitions and tech organizations.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </animated.div>
+        </div>
       </section>
 
       {/* Skills Section */}
