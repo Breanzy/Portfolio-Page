@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSpring, animated } from '@react-spring/web';
+import { useSpring, animated, useTrail, useChain, useSpringRef } from '@react-spring/web';
 import { Github, ExternalLink, Code, Database, Server, Smartphone } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -69,60 +69,98 @@ const Index = () => {
     { name: "Tools", icon: <Smartphone className="w-5 h-5" />, techs: ["Git", "Docker", "Vercel", "AWS", "Stripe"] }
   ];
 
+  // Hero section animations
+  const heroRef = useSpringRef();
   const heroSpring = useSpring({
+    ref: heroRef,
+    opacity: 1,
+    transform: 'translateY(0px) scale(1)',
+    from: { opacity: 0, transform: 'translateY(100px) scale(0.8)' },
+    config: { tension: 120, friction: 20 },
+  });
+
+  const titleRef = useSpringRef();
+  const titleSpring = useSpring({
+    ref: titleRef,
+    opacity: 1,
+    transform: 'scale(1) rotateX(0deg)',
+    from: { opacity: 0, transform: 'scale(0.5) rotateX(-90deg)' },
+    config: { tension: 200, friction: 25 },
+  });
+
+  const buttonsRef = useSpringRef();
+  const buttonsSpring = useSpring({
+    ref: buttonsRef,
     opacity: 1,
     transform: 'translateY(0px)',
     from: { opacity: 0, transform: 'translateY(50px)' },
     config: { tension: 280, friction: 60 },
-    delay: 300,
   });
 
-  const titleSpring = useSpring({
+  // Chain animations for dramatic entrance
+  useChain([heroRef, titleRef, buttonsRef], [0, 0.3, 0.6]);
+
+  // Trail animation for skills
+  const skillsTrail = useTrail(skills.length, {
     opacity: 1,
-    transform: 'scale(1)',
-    from: { opacity: 0, transform: 'scale(0.8)' },
-    config: { tension: 200, friction: 20 },
-    delay: 600,
+    transform: 'translateX(0px) rotateY(0deg)',
+    from: { opacity: 0, transform: 'translateX(-100px) rotateY(-180deg)' },
+    config: { tension: 280, friction: 60 },
+    delay: 200,
+  });
+
+  // Bouncing animation for gradient background
+  const backgroundSpring = useSpring({
+    background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 25%, #1e40af 50%, #3b82f6 75%, #0f172a 100%)',
+    backgroundSize: '400% 400%',
+    config: { duration: 8000 },
+    loop: true,
+    from: { backgroundPosition: '0% 50%' },
+    to: { backgroundPosition: '100% 50%' },
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-navy-950 relative overflow-hidden">
+    <animated.div style={backgroundSpring} className="min-h-screen relative overflow-hidden">
       <FloatingElements />
       
+      {/* Animated overlay gradients */}
+      <div className="absolute inset-0 bg-gradient-to-br from-navy-950/90 via-transparent to-blue-950/90 pointer-events-none z-[1]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.3),transparent_50%)] pointer-events-none z-[2]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(30,64,175,0.2),transparent_50%)] pointer-events-none z-[2]" />
+      
       {/* Hero Section */}
-      <section className="relative px-6 py-24 text-center overflow-hidden z-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent)] pointer-events-none" />
+      <section className="relative px-6 py-32 text-center overflow-hidden z-10">
         <div className="relative z-10 max-w-4xl mx-auto">
-          <animated.div style={heroSpring} className="mb-8">
-            <animated.h1 style={titleSpring} className="text-6xl md:text-8xl font-bold text-white mb-4 tracking-tight">
-              <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent">
+          <animated.div style={heroSpring} className="mb-12">
+            <animated.h1 style={titleSpring} className="text-7xl md:text-9xl font-bold mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-blue-300 via-navy-400 to-blue-500 bg-clip-text text-transparent drop-shadow-2xl">
                 Brean Julius
               </span>
             </animated.h1>
-            <animated.h2 style={titleSpring} className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
+            <animated.h2 style={titleSpring} className="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight drop-shadow-lg">
               Carbonilla
             </animated.h2>
           </animated.div>
-          <animated.p style={heroSpring} className="text-xl md:text-2xl text-gray-300 mb-8 font-light">
+          <animated.p style={heroSpring} className="text-2xl md:text-3xl text-blue-200 mb-12 font-light leading-relaxed drop-shadow-lg">
             Full Stack Developer crafting digital experiences with modern technologies
           </animated.p>
-          <animated.div style={heroSpring} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <animated.div style={buttonsSpring} className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button 
               asChild 
               size="lg" 
-              className="bg-gradient-to-r from-blue-600 to-navy-700 hover:from-blue-700 hover:to-navy-800 text-white border-0 px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              className="bg-gradient-to-r from-navy-600 via-blue-600 to-navy-700 hover:from-navy-700 hover:via-blue-700 hover:to-navy-800 text-white border-0 px-10 py-4 text-xl shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-110"
             >
               <a href="https://github.com/Breanzy" target="_blank" rel="noopener noreferrer">
-                <Github className="w-5 h-5 mr-2" />
+                <Github className="w-6 h-6 mr-3" />
                 View My Work
               </a>
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white px-8 py-3 text-lg backdrop-blur-sm"
+              className="border-2 border-blue-400 text-blue-300 hover:bg-gradient-to-r hover:from-blue-400 hover:to-navy-600 hover:text-white px-10 py-4 text-xl backdrop-blur-lg bg-navy-900/30 hover:scale-110 transition-all duration-500"
             >
-              <ExternalLink className="w-5 h-5 mr-2" />
+              <ExternalLink className="w-6 h-6 mr-3" />
               Contact Me
             </Button>
           </animated.div>
@@ -132,26 +170,29 @@ const Index = () => {
       {/* About Section */}
       <AboutSection />
 
-      {/* Skills Section */}
-      <section className="px-6 py-16 relative z-10">
+      {/* Skills Section with Trail Animation */}
+      <section className="px-6 py-20 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl font-bold text-white text-center mb-12">Technical Arsenal</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skills.map((skill, index) => {
-              const skillSpring = useSpring({
-                opacity: 1,
-                transform: 'translateY(0px)',
-                from: { opacity: 0, transform: 'translateY(30px)' },
-                delay: index * 100,
-                config: { tension: 280, friction: 60 },
-              });
-
+          <animated.h3 
+            style={useSpring({
+              opacity: 1,
+              transform: 'translateY(0px)',
+              from: { opacity: 0, transform: 'translateY(50px)' },
+              delay: 100,
+            })}
+            className="text-4xl font-bold text-white text-center mb-16 drop-shadow-lg"
+          >
+            Technical Arsenal
+          </animated.h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {skillsTrail.map((style, index) => {
+              const skill = skills[index];
               return (
-                <animated.div key={skill.name} style={skillSpring}>
-                  <Card className="bg-gradient-to-br from-slate-900/50 to-blue-900/30 border-blue-700 hover:border-blue-500 transition-colors backdrop-blur-sm">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center gap-3 text-white">
-                        <div className="p-2 bg-gradient-to-r from-blue-600 to-navy-700 rounded-lg">
+                <animated.div key={skill.name} style={style}>
+                  <Card className="bg-gradient-to-br from-navy-900/60 to-blue-900/40 border-2 border-blue-600/50 hover:border-blue-400 transition-all duration-500 backdrop-blur-xl hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="flex items-center gap-4 text-white text-lg">
+                        <div className="p-3 bg-gradient-to-r from-navy-600 to-blue-700 rounded-xl shadow-lg">
                           {skill.icon}
                         </div>
                         {skill.name}
@@ -160,7 +201,7 @@ const Index = () => {
                     <CardContent>
                       <div className="flex flex-wrap gap-2">
                         {skill.techs.map((tech) => (
-                          <Badge key={tech} variant="secondary" className="bg-slate-800 text-gray-300 hover:bg-blue-800">
+                          <Badge key={tech} variant="secondary" className="bg-navy-800/80 text-blue-200 hover:bg-blue-700 hover:text-white transition-colors duration-300">
                             {tech}
                           </Badge>
                         ))}
@@ -175,52 +216,79 @@ const Index = () => {
       </section>
 
       {/* Featured Projects */}
-      <section className="px-6 py-16 relative z-10">
+      <section className="px-6 py-20 relative z-10">
         <div className="max-w-6xl mx-auto">
-          <h3 className="text-3xl font-bold text-white text-center mb-4">Featured Projects</h3>
-          <p className="text-gray-400 text-center mb-12">Showcasing my best full-stack development work</p>
+          <animated.div
+            style={useSpring({
+              opacity: 1,
+              transform: 'translateY(0px)',
+              from: { opacity: 0, transform: 'translateY(50px)' },
+              delay: 200,
+            })}
+          >
+            <h3 className="text-4xl font-bold text-white text-center mb-6 drop-shadow-lg">Featured Projects</h3>
+            <p className="text-blue-200 text-xl text-center mb-16 drop-shadow-md">Showcasing my best full-stack development work</p>
+          </animated.div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20">
             {projects.filter(p => p.featured).map((project, index) => (
-              <ProjectCard key={project.name} project={project} delay={index * 200} />
+              <ProjectCard key={project.name} project={project} delay={index * 300} />
             ))}
           </div>
 
           {/* Other Projects */}
-          <h4 className="text-2xl font-bold text-white text-center mb-8">More Projects</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <animated.div
+            style={useSpring({
+              opacity: 1,
+              transform: 'translateY(0px)',
+              from: { opacity: 0, transform: 'translateY(50px)' },
+              delay: 400,
+            })}
+          >
+            <h4 className="text-3xl font-bold text-white text-center mb-12 drop-shadow-lg">More Projects</h4>
+          </animated.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.filter(p => !p.featured).map((project, index) => (
-              <ProjectCard key={project.name} project={project} delay={index * 150} />
+              <ProjectCard key={project.name} project={project} delay={index * 200 + 600} />
             ))}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-16 border-t border-blue-800/50 relative z-10 backdrop-blur-sm">
+      <footer className="px-6 py-20 border-t border-blue-600/30 relative z-10 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-2xl font-bold text-white mb-4">Let's Build Something Amazing</h3>
-          <p className="text-gray-400 mb-8">
-            Always excited to work on challenging projects and explore new technologies
-          </p>
-          <Button 
-            asChild 
-            size="lg" 
-            className="bg-gradient-to-r from-blue-600 to-navy-700 hover:from-blue-700 hover:to-navy-800 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+          <animated.div
+            style={useSpring({
+              opacity: 1,
+              transform: 'translateY(0px) scale(1)',
+              from: { opacity: 0, transform: 'translateY(50px) scale(0.8)' },
+              delay: 800,
+            })}
           >
-            <a href="https://github.com/Breanzy" target="_blank" rel="noopener noreferrer">
-              <Github className="w-5 h-5 mr-2" />
-              Connect on GitHub
-            </a>
-          </Button>
-          <div className="mt-8 pt-8 border-t border-blue-800/50">
-            <p className="text-gray-500 text-sm">
+            <h3 className="text-3xl font-bold text-white mb-6 drop-shadow-lg">Let's Build Something Amazing</h3>
+            <p className="text-blue-200 mb-10 text-lg drop-shadow-md">
+              Always excited to work on challenging projects and explore new technologies
+            </p>
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-gradient-to-r from-navy-600 via-blue-600 to-navy-700 hover:from-navy-700 hover:via-blue-700 hover:to-navy-800 text-white shadow-2xl hover:shadow-blue-500/50 transition-all duration-500 hover:scale-110 px-8 py-4 text-lg"
+            >
+              <a href="https://github.com/Breanzy" target="_blank" rel="noopener noreferrer">
+                <Github className="w-6 h-6 mr-3" />
+                Connect on GitHub
+              </a>
+            </Button>
+          </animated.div>
+          <div className="mt-12 pt-8 border-t border-blue-600/30">
+            <p className="text-blue-300/70 text-sm drop-shadow-md">
               © 2024 Brean Julius Carbonilla. Crafted with passion and modern web technologies.
             </p>
           </div>
         </div>
       </footer>
-    </div>
+    </animated.div>
   );
 };
 
